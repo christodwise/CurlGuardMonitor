@@ -3,7 +3,7 @@ import { Monitor, MonitorStatus, LogEntry } from './types';
 import { checkUptime } from './services/monitorService';
 import { MonitorCard } from './components/MonitorCard';
 import { TerminalLog } from './components/TerminalLog';
-import { Plus, Activity, Server, LayoutDashboard } from 'lucide-react';
+import { Plus, Activity, Server, LayoutDashboard, AlertTriangle, XCircle } from 'lucide-react';
 
 const DEFAULT_MONITORS: Monitor[] = [
   {
@@ -146,6 +146,8 @@ const App: React.FC = () => {
     )
   };
 
+  const downMonitors = monitors.filter(m => m.status === MonitorStatus.DOWN);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 md:p-12 font-sans selection:bg-emerald-500/30">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -191,6 +193,47 @@ const App: React.FC = () => {
              </button>
           </div>
         </header>
+
+        {/* DOWN Servers Panel */}
+        {downMonitors.length > 0 && (
+          <div className="bg-red-500/5 border border-red-500/20 rounded-xl overflow-hidden animate-in fade-in slide-in-from-top-4 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+            <div className="bg-red-500/10 px-6 py-3 flex items-center gap-3 border-b border-red-500/10">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+              <h3 className="font-bold text-red-400 tracking-tight">
+                Attention: {downMonitors.length} Server{downMonitors.length === 1 ? '' : 's'} DOWN
+              </h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-red-500/5 text-red-300/70 uppercase text-xs font-semibold">
+                  <tr>
+                    <th className="px-6 py-3 w-1/4">DNS / Service Name</th>
+                    <th className="px-6 py-3 w-1/3">Address (URL/IP)</th>
+                    <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3">Last Checked</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-red-500/10">
+                  {downMonitors.map(m => (
+                    <tr key={m.id} className="hover:bg-red-500/5 transition-colors">
+                      <td className="px-6 py-4 font-medium text-red-200">{m.name}</td>
+                      <td className="px-6 py-4 font-mono text-red-300/70 text-xs">{m.url}</td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold tracking-wide">
+                          <XCircle className="w-3.5 h-3.5" />
+                          DOWN
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-red-300/50 font-mono text-xs">
+                        {m.lastChecked ? new Date(m.lastChecked).toLocaleTimeString() : 'Never'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* Add Form */}
         {isAdding && (
