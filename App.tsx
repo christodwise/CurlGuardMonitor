@@ -317,8 +317,14 @@ const App: React.FC = () => {
                Status "UP" means the server connection was established.
              </div>
           </div>
-
         </div>
+
+        {/* Footer */}
+        <footer className="mt-12 pt-8 border-t border-zinc-900 text-center">
+          <p className="text-zinc-600 text-sm">
+            Made by <span className="text-zinc-400 font-semibold">LifeTrenz DevOps Team</span>
+          </p>
+        </footer>
       </div>
     </div>
   );
