@@ -1,0 +1,5 @@
+{
+  "name": "CurlGuard Uptime Monitor",
+  "description": "A real-time server uptime monitoring dashboard simulating curl checks with AI-powered incident reporting.",
+  "requestFramePermissions": []
+}
